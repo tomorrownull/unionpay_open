@@ -19,6 +19,11 @@ module UnionpayOpen
           certId: @@pkcs12.certificate.serial.to_s,
           merId: @@merchant_no }
       end
+      
+      def verify?(request)
+         params = request.request_parameters.except(:signature).map{ |k, v| "#{k}=#{v}" }.join('&')
+         request.request_parameters[:signature]==self.sign(params)
+      end  
 
     end
   end
