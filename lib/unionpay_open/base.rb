@@ -21,9 +21,9 @@ module UnionpayOpen
       end
       
       def verify?(request)
-         verify_params = request.request_parameters.except(:signature).map{ |k, v| "#{k}=#{v}" }.join('&')
-         request.request_parameters[:signature]==self.sign(verify_params)
-      end  
+        verify_params = request.request_parameters.except(:signature).sort.map{ |k, v| "#{k}=#{v}" }.join('&')
+        request.request_parameters[:signature]==self.sign(verify_params)
+      end
 
     end
   end
