@@ -12,10 +12,8 @@ module UnionpayOpen
                             Digest::SHA1.hexdigest(data)) )
       end
       
-      def public_key_sign(data)
-                Base64.strict_encode64(
-          @@x509_certificate.key.sign(OpenSSL::Digest::SHA1.new,
-                            Digest::SHA1.hexdigest(data)) )
+      def verify(signature,raw_data)
+        @@x509_certificate.public_key.verify(OpenSSL::Digest::SHA1.new,Base64.decode64(signature), Digest::SHA1.hexdigest(raw_data))
       end  
 
       def global_fixed_params
@@ -28,7 +26,7 @@ module UnionpayOpen
       
       def verify?(request)
         verify_params = request.request_parameters.except(:signature).sort.map{ |k, v| "#{k}=#{v}" }.join('&')
-        request.request_parameters[:signature]==self.public_key_sign(verify_params)
+        self.verify(request.params[:signature],verify_params)
       end
 
     end
