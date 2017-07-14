@@ -11,6 +11,12 @@ module UnionpayOpen
           @@pkcs12.key.sign(OpenSSL::Digest::SHA1.new,
                             Digest::SHA1.hexdigest(data)) )
       end
+      
+      def public_key_sign(data)
+                Base64.strict_encode64(
+          @@x509_certificate.key.sign(OpenSSL::Digest::SHA1.new,
+                            Digest::SHA1.hexdigest(data)) )
+      end  
 
       def global_fixed_params
         { version: '5.0.0',
